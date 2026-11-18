@@ -8,9 +8,17 @@ SOURCE_VERSION=1.2.0+ds
 UPSTREAM_REF=$(printenv UPSTREAM_REF || true)
 [ -n "$UPSTREAM_REF" ] || UPSTREAM_REF=b16f442d65add29a5aa094ef9e8eaf6e51f9eebf
 if [ "$#" -gt 0 ]; then OUT=$1; else OUT="$ROOT/../debian-build"; fi
-for tool in git tar dpkg-buildpackage python3; do
-    command -v "$tool" >/dev/null 2>&1 || { echo "Missing build tool: $tool" >&2; exit 1; }
+for tool in git tar dpkg-buildpackage dpkg-checkbuilddeps python3; do
+    command -v "$tool" >/dev/null 2>&1 || {
+        echo "Missing build tool: $tool" >&2
+        echo "Install build prerequisites on your development VM: sudo apt install build-essential debhelper dh-python devscripts lintian dpkg-dev dput gnupg python3 git xz-utils" >&2
+        exit 1
+    }
 done
+if ! dpkg-checkbuilddeps "$ROOT/debian/control"; then
+    echo "Install the missing Debian build dependencies (dh-sequence-python3 is provided by dh-python)." >&2
+    exit 1
+fi
 if grep -Eq 'uploader@example.invalid|YOUR PERSONAL NAME|your-email@example.invalid|YOUR REAL NAME' "$ROOT/debian/control" "$ROOT/debian/changelog"; then
     echo 'Debian Policy requires a named personal Uploader; edit debian/control before preparing an upload.' >&2
     exit 1

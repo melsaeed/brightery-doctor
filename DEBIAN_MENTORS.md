@@ -20,7 +20,7 @@ Use a clean Debian unstable VM or container; do not build or sign on a productio
 
 ```bash
 sudo apt update
-sudo apt install git devscripts build-essential debhelper dh-sequence-python3 python3 lintian dput reportbug dpkg-dev
+sudo apt install git devscripts build-essential debhelper dh-python python3 lintian dput reportbug dpkg-dev xz-utils
 git clone https://github.com/melsaeed/brightery-doctor.git
 cd brightery-doctor
 ```
@@ -88,7 +88,7 @@ Copyright format: https://www.debian.org/doc/packaging-manuals/copyright-format/
 
 ## One-command review and final signature
 
-After supplying a real personal Uploaders identity and filing an ITP, run a local source/binary packaging preflight (uses lintian and Debian build tools; requires a Debian development machine):
+After confirming the real personal Uploaders identity and filing an ITP, run a local source/binary packaging preflight (uses lintian and Debian build tools; requires a Debian development machine):
 
 ```bash
 ./scripts/check-debian-source.sh
@@ -106,3 +106,31 @@ To perform the remaining signer-controlled upload using your personal private ke
 The script checks your personal secret key is available, requests confirmation, invokes `debsign`, then uploads with `dput mentors` if signing succeeds. It does not run in the APT package or in a scheduled job. Do not run this until the source has passed clean-room review, a sponsor accepts the package for consideration, and the ITP exists.
 
 ITP and RFS drafts are under [packaging/ITP_DRAFT.txt](packaging/ITP_DRAFT.txt) and [packaging/RFS_GUIDE.md](packaging/RFS_GUIDE.md).
+
+## Troubleshooting missing build tools on Ubuntu
+
+The following errors are missing **development-machine packages**, not Brightery Doctor application test failures:
+
+| Error | Install |
+| --- | --- |
+| `Required build tool missing: lintian` | `lintian` |
+| `unmet build dependencies: dh-sequence-python3` | `dh-python` (provides that virtual dependency) |
+| `Missing required program: debsign` | `devscripts` |
+
+On a **dedicated build machine**, install:
+
+```sh
+sudo apt update
+sudo apt install -y build-essential debhelper dh-python devscripts lintian dpkg-dev dput gnupg python3 git xz-utils
+```
+
+To verify the environment before rebuilding:
+
+```sh
+command -v lintian
+command -v debsign
+command -v dh_python3
+dpkg-checkbuilddeps debian/control
+```
+
+**Do not upload merely because the 16 upstream unit tests pass.** Complete the source/binary checks, file the ITP, and put its bug number in `debian/changelog` before signing. Your key fingerprint is not a private key. The signing machine needs the private key; keep it on your trusted workstation, not a production VPS. The signed source must be uploaded from that trusted machine.

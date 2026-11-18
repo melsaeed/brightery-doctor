@@ -3,12 +3,17 @@
 set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 VERSION=1.2.0+ds-1
-for program in git python3 dpkg-buildpackage dpkg-source dpkg-deb lintian dh; do
+for program in git python3 dpkg-buildpackage dpkg-source dpkg-deb dpkg-checkbuilddeps lintian dh dh_python3; do
     command -v "$program" >/dev/null 2>&1 || {
         echo "Required build tool missing: $program" >&2
+        echo "On a development VM, run: sudo apt install build-essential debhelper dh-python devscripts lintian dpkg-dev dput gnupg python3 git xz-utils" >&2
         exit 1
     }
 done
+if ! dpkg-checkbuilddeps "$ROOT/debian/control"; then
+    echo "Missing build dependencies. Ubuntu/Debian package dh-python provides virtual dh-sequence-python3." >&2
+    exit 1
+fi
 if grep -Eq 'uploader@example.invalid|YOUR PERSONAL NAME' "$ROOT/debian/control"; then
     echo 'Debian Uploaders human name and email must be supplied first.' >&2
     exit 1
