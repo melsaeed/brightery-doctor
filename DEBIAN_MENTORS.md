@@ -31,11 +31,15 @@ The source **Maintainer** is `Brightery <support@brightery.com>` and **Uploaders
 
 Check https://www.debian.org/devel/wnpp/ and the Debian package tracker for an existing package. If none exists, file an **ITP** for upstream version 1.2.0, the Expat/MIT license, https://github.com/melsaeed/brightery-doctor and the Linux diagnostic purpose.
 
-**On Ubuntu hosts**, `reportbug` defaults to the Ubuntu bug system, which is unsupported by this tool. Explicitly direct it to Debian using `-B debian`:
+**On Ubuntu hosts**, `reportbug` defaults to the Ubuntu bug system, which is unsupported by this tool. Explicitly direct it to Debian with `-B debian`. In novice mode, querying WNPP may enumerate thousands of unrelated reports; after checking that no ITP for `brightery-doctor` already exists, pass `--no-query-bts` to skip that enormous interactive listing:
 
 ```sh
-reportbug -B debian --email m.elsaeed@brightery.com wnpp
+reportbug -B debian --no-query-bts \
+  --realname "Muhammad Elsaeed" \
+  --email m.elsaeed@brightery.com wnpp
 ```
+
+Do not run the reporting tool as `root` on a production server if a regular user or trusted development workstation is available. The `--realname` flag also avoids an incorrect `root <m.elsaeed@brightery.com>` From identity.
 
 Select **ITP (Intent to Package)** and fill the prompts with the data from [packaging/ITP_DRAFT.txt](packaging/ITP_DRAFT.txt). The command only submits the ITP if email delivery is configured and you explicitly send the report. Configure a trusted SMTP relay or mail transport if needed; otherwise send a correctly formatted ITP email from the legitimate Brightery mailbox to `submit@bugs.debian.org`. Debian will email a bug number after accepting the report. Do not assume a number until Debian confirms it.
 
