@@ -1,7 +1,7 @@
 #!/bin/sh
 # Create unsigned Debian source packages without prebuilt binaries or APT keys.
 set -eu
-umask 077
+umask 022
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 UPSTREAM_VERSION=1.2.0
 SOURCE_VERSION=1.2.0+ds
@@ -11,8 +11,8 @@ if [ "$#" -gt 0 ]; then OUT=$1; else OUT="$ROOT/../debian-build"; fi
 for tool in git tar dpkg-buildpackage python3; do
     command -v "$tool" >/dev/null 2>&1 || { echo "Missing build tool: $tool" >&2; exit 1; }
 done
-if grep -q 'your-email@example.invalid' "$ROOT/debian/control" "$ROOT/debian/changelog"; then
-    echo 'Replace placeholder Maintainer identity in debian/control and debian/changelog before building.' >&2
+if grep -Eq 'uploader@example.invalid|YOUR PERSONAL NAME|your-email@example.invalid|YOUR REAL NAME' "$ROOT/debian/control" "$ROOT/debian/changelog"; then
+    echo 'Debian Policy requires a named personal Uploader; edit debian/control before preparing an upload.' >&2
     exit 1
 fi
 if ! git -C "$ROOT" cat-file -e "$UPSTREAM_REF^{commit}" 2>/dev/null; then

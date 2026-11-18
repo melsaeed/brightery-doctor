@@ -12,10 +12,11 @@ The packaging uses debhelper 13 and dh-sequence-python3, and the
 Python standard library only. It does not auto-start a daemon or
 open listening ports.
 
-Before submission, replace YOUR REAL NAME and your-email@example.invalid
-in debian/control and debian/changelog, use a real deliverable email
-matching your Debian Mentors account, publish an upstream v1.2.0 tag,
-and file an ITP bug. Add its bug number to the Debian changelog before
+The Maintainer is Brightery <support@brightery.com>. Debian Policy requires
+one real human with a personal email in Uploaders when Maintainer is a group.
+Replace YOUR PERSONAL NAME <uploader@example.invalid> in debian/control
+and verify the personal OpenPGP key for this person is registered at Debian
+Mentors. Publish an upstream v1.2.0 tag and file an ITP bug. Add its bug number to the Debian changelog before
 the final signed upload.
 
 Review the lintian results and use a clean unstable chroot/sbuild test

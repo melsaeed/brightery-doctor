@@ -75,3 +75,7 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting.
 ## Official Debian and Ubuntu archive submission
 
 Debian-standard source packaging is in `debian/`, with a source-only build helper and a submission guide in [DEBIAN_MENTORS.md](DEBIAN_MENTORS.md). **Not yet accepted into Debian or Ubuntu.** A real maintainer identity, ITP bug, clean build/lintian checks, personal OpenPGP key, and sponsoring Debian Developer are still required. The existing signed APT repository uses a **different archive key**.
+
+### Debian Maintainer identity
+
+Official-archive packaging lists **Brightery <support@brightery.com>** as the Maintainer, and has a deliberately unfilled human `Uploaders` identity (required when the Maintainer is a company). See [DEBIAN_MENTORS.md](DEBIAN_MENTORS.md). Do not publish a Debian source package with this placeholder. This does not affect the existing signed APT package.

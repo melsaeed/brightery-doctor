@@ -25,7 +25,7 @@ git clone https://github.com/melsaeed/brightery-doctor.git
 cd brightery-doctor
 ```
 
-Replace the placeholder `YOUR REAL NAME <your-email@example.invalid>` **in both** `debian/control` and `debian/changelog` with your actual name and reachable, key-associated email. Do not upload packages with placeholders.
+The source **Maintainer** is already set to `Brightery <support@brightery.com>`, and the Debian changelog identifies Brightery as requested. Because Brightery is an organization using a shared contact email, Debian Policy §5.6.3 requires **at least one named human** in `Uploaders:`. Edit `debian/control` to replace `YOUR PERSONAL NAME <uploader@example.invalid>` with the person maintaining Debian packages (and a personal, reachable address associated with the registered OpenPGP key). Do not upload with the placeholder. A sponsor may also ask to identify a human as `Changed-By`.
 
 ## File an ITP and tag the upstream release
 
