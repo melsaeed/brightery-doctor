@@ -8,8 +8,10 @@ __pycache__/
 *.asc
 *.gpg
 !docs/apt/brightery-doctor-archive-keyring.gpg
+!docs/apt/dists/stable/Release.gpg
 dist/
 *.deb
+!docs/apt/pool/**/*.deb
 *.log
 *.jsonl
 reports/

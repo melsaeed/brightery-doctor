@@ -13,8 +13,8 @@ import sys
 import time
 
 VERSION = "1.1.0"
-MAX_PROCESSES = 8192
-MAX_SAMPLES = 241
+MAX_PROCESSES = 4096
+MAX_SAMPLES = 41
 SERVICE_RE = re.compile(r"(?:^|/)([A-Za-z0-9_.@-]{1,88}\.service)(?:/|$)")
 
 
@@ -307,7 +307,7 @@ def main(argv=None):
         remaining = finish - time.monotonic()
         if remaining <= 0:
             break
-        time.sleep(min(args.interval, remaining))
+        time.sleep(min(max(args.interval, args.seconds / (MAX_SAMPLES - 1)), remaining))
         samples.append(snapshot())
     result = summarize(first, samples[-1], samples, args.include_hostname)
     if args.json or args.save:

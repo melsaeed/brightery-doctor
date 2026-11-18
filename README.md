@@ -7,7 +7,7 @@ Read-only Linux/Ubuntu server diagnosis, using only Python 3's standard library.
 - **No network access**, no subprocess execution, no service restarts, no cleanup, no installation of dependencies while scanning.
 - Process **command-line arguments and environment variables are never recorded**. Hostname is excluded by default. Output contains process and service names/PIDs, which can still be identifying; review reports before sharing.
 - `--save` is the only scan option that writes a file. It creates a fresh report with mode `0600`, refuses existing files and final-component symlinks. Use a trusted directory; do not write as root into a directory controlled by other users.
-- Bounded sampling: 120-second limit, at most 8,192 process entries per sample and 241 samples. Best-effort attribution—not proof of causation. The tool does not require root; non-root users may see less detail.
+- Bounded sampling: 120-second limit, at most 4,096 process entries per sample and 41 samples. Best-effort attribution—not proof of causation. The tool does not require root; non-root users may see less detail.
 - No persistent agent, server, open port, remote API, or auto-update feature.
 
 ## Usage from source
