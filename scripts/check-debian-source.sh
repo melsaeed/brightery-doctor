@@ -36,5 +36,9 @@ BIN="$WORK/brightery-doctor_${VERSION}_all.deb"
 [ -s "$BIN" ] || { echo "Missing binary Debian package" >&2; exit 1; }
 lintian --pedantic "$BIN"
 dpkg-deb --contents "$BIN" | grep -Fq 'usr/bin/brightery-doctor'
+dpkg-deb --contents "$BIN" | grep -Fq 'usr/share/man/man1/brightery-doctor.1.gz'
 dpkg-deb --contents "$BIN" | grep -Fq 'usr/lib/python3/dist-packages/brightery_doctor/cli.py'
+if ! grep -Eq '\(Closes: #[0-9]+\)' "$ROOT/debian/changelog"; then
+    echo 'NOTICE: initial-upload-closes-no-bugs remains until Debian assigns an ITP number. Update changelog and rebuild before upload.' >&2
+fi
 echo "Passed local source and binary checks. Next: clean Debian unstable sbuild, autopkgtest, and human review."

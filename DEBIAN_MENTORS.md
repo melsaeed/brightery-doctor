@@ -134,3 +134,23 @@ dpkg-checkbuilddeps debian/control
 ```
 
 **Do not upload merely because the 16 upstream unit tests pass.** Complete the source/binary checks, file the ITP, and put its bug number in `debian/changelog` before signing. Your key fingerprint is not a private key. The signing machine needs the private key; keep it on your trusted workstation, not a production VPS. The signed source must be uploaded from that trusted machine.
+
+## Results from Ubuntu 26.04 packaging preflight (18 November 2026)
+
+All 16 upstream tests passed and the Debian source/binary builds completed. The observed lintian findings were:
+
+- `redundant-priority-optional-field` and `redundant-rules-requires-root-no-field`: fields removed from `debian/control`.
+- `no-manual-page`: resolved by adding `debian/brightery-doctor.1` and `debian/brightery-doctor.manpages`.
+- `initial-upload-closes-no-bugs`: **still pending**; file the WNPP ITP and add its real number as `(Closes: #NNNNNNN)` in the initial changelog entry, then **rebuild both source and binary packages** before signing. Do not invent a bug number.
+
+The public key on the server has primary UID `Brightery <support@brightery.com>`; the Debian uploader is `Muhammad Elsaeed <m.elsaeed@brightery.com>`. To associate the existing signing key with the named uploader, on the **trusted key-owning machine** run:
+
+```sh
+gpg --quick-add-uid C850B1AB24FE1C31CFAAE3036F7DF6E2768F6B20 'Muhammad Elsaeed <m.elsaeed@brightery.com>'
+gpg --list-keys --with-fingerprint C850B1AB24FE1C31CFAAE3036F7DF6E2768F6B20
+gpg --armor --export C850B1AB24FE1C31CFAAE3036F7DF6E2768F6B20 > brightery-mentors-public.asc
+```
+
+Upload the **updated public** key to the Debian Mentors profile, ensuring the new UID is included. Never upload the private key. The private key currently appears to be held by `root` on the `shad` production server; move signing operations to a trusted dedicated signing computer and protect/backup the secret key. Avoid deleting the only key copy.
+
+Run builds as an **unprivileged user** (not `root`) in a clean Debian unstable build environment to avoid lintian root-privilege warnings and production-server risk.

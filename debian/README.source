@@ -21,3 +21,7 @@ the final signed upload.
 
 Review the lintian results and use a clean unstable chroot/sbuild test
 before seeking a sponsor.
+
+The Debian packaging supplies a command manual page in debian/brightery-doctor.1
+and installs it with debian/brightery-doctor.manpages.
+The initial changelog entry needs the REAL ITP bug number before upload.

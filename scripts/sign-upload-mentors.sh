@@ -22,6 +22,10 @@ if grep -Eq 'uploader@example.invalid|YOUR PERSONAL NAME' "$ROOT/debian/control"
     echo 'Set a real human Uploaders identity first (Debian Policy §5.6.3)' >&2
     exit 2
 fi
+if ! grep -Eq '\(Closes: #[0-9]+\)' "$ROOT/debian/changelog"; then
+    echo 'An initial Debian upload must close a real ITP bug: add (Closes: #NUMBER) to debian/changelog, rebuild and revalidate before signing.' >&2
+    exit 2
+fi
 for tool in debsign dput gpg; do
     command -v "$tool" >/dev/null 2>&1 || {
         echo "Missing required program: $tool" >&2

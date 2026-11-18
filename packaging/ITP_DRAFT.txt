@@ -7,7 +7,7 @@ Subject: ITP: brightery-doctor -- read-only Linux server health dashboard
 
 Package: wnpp
 Severity: wishlist
-Owner: Brightery <support@brightery.com>
+Owner: Muhammad Elsaeed <m.elsaeed@brightery.com>
 X-Debbugs-Cc: debian-devel@lists.debian.org
 
 * Package name    : brightery-doctor
