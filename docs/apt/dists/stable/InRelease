@@ -1,0 +1,21 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Origin: Brightery Doctor
+Label: Brightery Doctor
+Suite: stable
+Codename: stable
+Architectures: all
+Components: main
+Description: Signed Brightery Doctor APT archive
+Date: Wed, 18 Nov 2026 12:39:40 +0000
+SHA256:
+ 4f84292de03a8aac79bf0895ec1e2a4008bec4d231b8f20df2cb4827175d54e4 605 main/binary-all/Packages
+ f77dc66fefb78586f353abf5f9d1805560b4f582b1cbb68def18bb138b1a5c9e 433 main/binary-all/Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQTmPTlU5FMmUKDaKGUHDLVrL/OTxwUCav2cjAAKCRAHDLVrL/OT
+x6GYAP4wZwo5dAbfPUN8NshotdMLgRlQSpzeKY0bJYx7OrfgtgD9GT70gf7+K1VR
+/Xe+VosNgln0mE6bwklvDrqWO8Qm4A4=
+=qp7L
+-----END PGP SIGNATURE-----

@@ -25,7 +25,7 @@ On Debian/Ubuntu with `dpkg-deb` installed:
 ```bash
 python3 -m unittest discover -s tests -v
 ./scripts/build-deb.sh
-sudo apt install ./dist/brightery-doctor_1.1.0_all.deb
+sudo apt install ./dist/brightery-doctor_1.1.1_all.deb
 brightery-doctor --seconds 6
 ```
 
@@ -39,3 +39,7 @@ python3 -m py_compile brightery_doctor/cli.py
 ```
 
 Issues and security reports: see [SECURITY.md](SECURITY.md). Licensed under MIT.
+
+## Published APT archive
+
+The signed archive files are tracked in `docs/apt/`. The signing fingerprint is **`E63D3954E4532650A0DA2865070CB56B2FF393C7`**. Verify this fingerprint independently before installing. Until GitHub Pages is enabled, the raw GitHub archive can be used as the source URL. See [APT_REPOSITORY.md](APT_REPOSITORY.md) for instructions and security notes. APT validates the signed `InRelease` metadata and SHA256 hashes for packages.

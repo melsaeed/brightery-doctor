@@ -5,7 +5,7 @@ ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 APT_GPG_KEY_ID=$(printenv APT_GPG_KEY_ID || true)
 [ -n "$APT_GPG_KEY_ID" ] || { echo 'Set APT_GPG_KEY_ID to your dedicated signing key fingerprint' >&2; exit 1; }
 for binary in dpkg-scanpackages gpg gzip sha256sum; do command -v "$binary" >/dev/null; done
-DEB="$ROOT/dist/brightery-doctor_1.1.0_all.deb"
+DEB="$ROOT/dist/brightery-doctor_1.1.1_all.deb"
 [ -r "$DEB" ] || { echo 'Run scripts/build-deb.sh first' >&2; exit 1; }
 OUT="$ROOT/docs/apt"
 mkdir -p "$OUT/pool/main/b/brightery-doctor" "$OUT/dists/stable/main/binary-all"

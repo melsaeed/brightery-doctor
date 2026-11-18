@@ -12,7 +12,7 @@ import re
 import sys
 import time
 
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 MAX_PROCESSES = 4096
 MAX_SAMPLES = 41
 SERVICE_RE = re.compile(r"(?:^|/)([A-Za-z0-9_.@-]{1,88}\.service)(?:/|$)")

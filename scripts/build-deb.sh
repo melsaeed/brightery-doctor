@@ -1,12 +1,13 @@
 #!/bin/sh
 set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-VERSION=1.1.0
+VERSION=1.1.1
 OUT="$ROOT/dist"
 mkdir -p "$OUT"
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT HUP INT TERM
-mkdir -p "$TMP/DEBIAN" "$TMP/usr/bin" "$TMP/usr/lib/python3/dist-packages/brightery_doctor" "$TMP/usr/share/doc/brightery-doctor"
+install -d -m 0755 "$TMP/DEBIAN" "$TMP/usr/bin" "$TMP/usr/lib/python3/dist-packages/brightery_doctor" "$TMP/usr/share/doc/brightery-doctor"
+chmod 0755 "$TMP" "$TMP/usr" "$TMP/usr/lib" "$TMP/usr/lib/python3" "$TMP/usr/lib/python3/dist-packages" "$TMP/usr/share" "$TMP/usr/share/doc"
 cat > "$TMP/DEBIAN/control" <<EOF
 Package: brightery-doctor
 Version: $VERSION
