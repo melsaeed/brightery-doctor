@@ -1,6 +1,7 @@
 # Debian WNPP Intent to Package — draft
 # Check for existing Debian package/ITP before filing.
-# Send with a verified mail account or reportbug. This is NOT submitted.
+# Historical draft: Debian acknowledged ITP #1154410 on 18 November 2026.
+# Do not submit again. https://bugs.debian.org/1154410
 
 To: submit@bugs.debian.org
 Subject: ITP: brightery-doctor -- read-only Linux server health dashboard

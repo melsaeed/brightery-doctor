@@ -1,6 +1,7 @@
 brightery-doctor (1.2.0+ds-1) unstable; urgency=medium
 
   * Initial Debian packaging of the read-only Linux diagnostic tool.
+    (Closes: #1154410)
   * Repack upstream sources to exclude prebuilt APT packages and keys.
   * Run upstream unit tests during Debian builds.
 

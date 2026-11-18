@@ -16,8 +16,7 @@ The Maintainer is Brightery <support@brightery.com>. Debian Policy requires
 one real human with a personal email in Uploaders when Maintainer is a group.
 The Uploaders field identifies Muhammad Elsaeed <m.elsaeed@brightery.com>.
 Before uploading, verify the PERSONAL OpenPGP key for that person is
-registered at Debian Mentors and includes the corresponding email address. Publish an upstream v1.2.0 tag and file an ITP bug. Add its bug number to the Debian changelog before
-the final signed upload.
+registered at Debian Mentors and includes the corresponding email address. Verify the upstream v1.2.0 tag. The confirmed ITP #1154410 is referenced in the changelog; rebuild before signing.
 
 Review the lintian results and use a clean unstable chroot/sbuild test
 before seeking a sponsor.
@@ -26,4 +25,4 @@ The upstream project supplies man/brightery-doctor.1 in its source tree.
 For the pinned 1.2.0 release, debian/patches/0001-add-upstream-manual.patch
 adds that upstream-forwarded manual to the source archive. The Debian
 packaging installs it with debian/brightery-doctor.manpages.
-The initial changelog entry needs the REAL ITP bug number before upload.
+The initial changelog closes Debian ITP #1154410.

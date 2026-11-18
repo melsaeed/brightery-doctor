@@ -1,6 +1,6 @@
 # Brightery Doctor — Debian Mentors packaging and submission
 
-**Status:** Packaging is prepared in `debian/`, but the package has **not** been accepted into Debian or Ubuntu. An ITP bug number, a signed upload, and sponsor review are still required. The package has not yet been checked by lintian or a clean Debian unstable sbuild.
+**Status:** Packaging is prepared in `debian/`, but the package has **not** been accepted into Debian or Ubuntu. Debian acknowledged [ITP #1154410](https://bugs.debian.org/1154410) on 18 November 2026. Local Ubuntu source/binary builds, 16 unit tests, and lintian checks passed before the ITP reference was added. Final rebuild, clean Debian unstable testing, signed Mentors upload, and sponsor review remain pending.
 
 ## Personal OpenPGP key
 
@@ -27,7 +27,9 @@ cd brightery-doctor
 
 The source **Maintainer** is `Brightery <support@brightery.com>` and **Uploaders** is `Muhammad Elsaeed <m.elsaeed@brightery.com>`. The Debian changelog trailer also names Muhammad Elsaeed as the release preparer (`Changed-By`), as Debian Policy expects. Confirm that the personal OpenPGP key registered on Debian Mentors has an appropriate UID for `m.elsaeed@brightery.com`. Never substitute the dedicated archive signing key for the personal key.
 
-## File an ITP and tag the upstream release
+## Registered ITP and upstream release
+
+**Already filed: [Debian ITP #1154410](https://bugs.debian.org/1154410).** Do not file a duplicate. The initial changelog now contains `(Closes: #1154410)`. The following reportbug instructions are retained for reference only.
 
 Check https://www.debian.org/devel/wnpp/ and the Debian package tracker for an existing package. If none exists, file an **ITP** for upstream version 1.2.0, the Expat/MIT license, https://github.com/melsaeed/brightery-doctor and the Linux diagnostic purpose.
 
@@ -43,7 +45,7 @@ Do not run the reporting tool as `root` on a production server if a regular user
 
 Select **ITP (Intent to Package)** and fill the prompts with the data from [packaging/ITP_DRAFT.txt](packaging/ITP_DRAFT.txt). The command only submits the ITP if email delivery is configured and you explicitly send the report. Configure a trusted SMTP relay or mail transport if needed; otherwise send a correctly formatted ITP email from the legitimate Brightery mailbox to `submit@bugs.debian.org`. Debian will email a bug number after accepting the report. Do not assume a number until Debian confirms it.
 
-Once assigned an ITP bug number, add `(Closes: #NUMBER)` to the initial entry in `debian/changelog`.
+The confirmed bug number has been added to `debian/changelog`; rebuild before signing.
 
 The upstream GitHub release tag `v1.2.0` should point at the audited upstream commit **b16f442d65add29a5aa094ef9e8eaf6e51f9eebf**, not a later commit containing Debian packaging changes:
 
@@ -107,7 +109,7 @@ After confirming the real personal Uploaders identity and filing an ITP, run a l
 ./scripts/build-debian-source.sh
 ```
 
-Once you have an ITP bug number, insert `(Closes: #NUMBER)` into `debian/changelog`, rebuild the source package, and review it. The signed upload must be produced **after** that change.
+The initial changelog already closes ITP #1154410. Rebuild and review the new source package before signing.
 
 To perform the remaining signer-controlled upload using your personal private key:
 
@@ -115,7 +117,7 @@ To perform the remaining signer-controlled upload using your personal private ke
 ./scripts/sign-upload-mentors.sh YOUR_PERSONAL_GPG_FINGERPRINT
 ```
 
-The script checks your personal secret key is available, requests confirmation, invokes `debsign`, then uploads with `dput mentors` if signing succeeds. It does not run in the APT package or in a scheduled job. Do not run this until the source has passed clean-room review, a sponsor accepts the package for consideration, and the ITP exists.
+The script checks your personal secret key is available, requests confirmation, invokes `debsign`, then uploads with `dput mentors` if signing succeeds. It does not run in the APT package or in a scheduled job. Do not run this until the source has passed clean-room review, and the registered ITP is included. Seek a sponsor after the Mentors upload.
 
 ITP and RFS drafts are under [packaging/ITP_DRAFT.txt](packaging/ITP_DRAFT.txt) and [packaging/RFS_GUIDE.md](packaging/RFS_GUIDE.md).
 
@@ -153,7 +155,7 @@ All 16 upstream tests passed and the Debian source/binary builds completed. The 
 
 - `redundant-priority-optional-field` and `redundant-rules-requires-root-no-field`: fields removed from `debian/control`.
 - `no-manual-page`: resolved by adding an upstream `man/brightery-doctor.1` and installing it with `debian/brightery-doctor.manpages`. For the v1.2.0 source tarball, Debian applies this upstream-forwarded manual page through `debian/patches/0001-add-upstream-manual.patch`.
-- `initial-upload-closes-no-bugs`: **still pending**; file the WNPP ITP and add its real number as `(Closes: #NNNNNNN)` in the initial changelog entry, then **rebuild both source and binary packages** before signing. Do not invent a bug number.
+- `initial-upload-closes-no-bugs`: addressed by `(Closes: #1154410)` in the initial changelog entry. **Rebuild both source and binary packages** before signing to verify the fix.
 
 The public key on the server has primary UID `Brightery <support@brightery.com>`; the Debian uploader is `Muhammad Elsaeed <m.elsaeed@brightery.com>`. To associate the existing signing key with the named uploader, on the **trusted key-owning machine** run:
 

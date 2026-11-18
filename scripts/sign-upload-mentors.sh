@@ -37,6 +37,11 @@ CHANGES="$ROOT/../debian-build/brightery-doctor_1.2.0+ds-1_source.changes"
     echo 'Build and validate the source package first with scripts/build-debian-source.sh' >&2
     exit 2
 }
+# Reject stale source artifacts built before the ITP was added.
+if ! grep -Eq '^Closes: ([0-9]+ )*1154410( |$)' "$CHANGES"; then
+    echo 'The source .changes does not close ITP #1154410. Rebuild from the current changelog before signing.' >&2
+    exit 2
+fi
 if ! gpg --batch --list-secret-keys "$KEY_ID" >/dev/null 2>&1; then
     echo 'Personal OpenPGP private key not found. Do not use the public-only key or the APT archive key.' >&2
     exit 2
