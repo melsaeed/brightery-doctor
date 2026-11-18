@@ -140,7 +140,7 @@ dpkg-checkbuilddeps debian/control
 All 16 upstream tests passed and the Debian source/binary builds completed. The observed lintian findings were:
 
 - `redundant-priority-optional-field` and `redundant-rules-requires-root-no-field`: fields removed from `debian/control`.
-- `no-manual-page`: resolved by adding `debian/brightery-doctor.1` and `debian/brightery-doctor.manpages`.
+- `no-manual-page`: resolved by adding an upstream `man/brightery-doctor.1` and installing it with `debian/brightery-doctor.manpages`. For the v1.2.0 source tarball, Debian applies this upstream-forwarded manual page through `debian/patches/0001-add-upstream-manual.patch`.
 - `initial-upload-closes-no-bugs`: **still pending**; file the WNPP ITP and add its real number as `(Closes: #NNNNNNN)` in the initial changelog entry, then **rebuild both source and binary packages** before signing. Do not invent a bug number.
 
 The public key on the server has primary UID `Brightery <support@brightery.com>`; the Debian uploader is `Muhammad Elsaeed <m.elsaeed@brightery.com>`. To associate the existing signing key with the named uploader, on the **trusted key-owning machine** run:

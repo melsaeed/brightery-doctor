@@ -1,0 +1,102 @@
+Description: Include CLI manual page in the upstream source
+Author: Muhammad Elsaeed <m.elsaeed@brightery.com>
+Origin: upstream, https://github.com/melsaeed/brightery-doctor/blob/main/man/brightery-doctor.1
+Forwarded: https://github.com/melsaeed/brightery-doctor/blob/main/man/brightery-doctor.1
+Last-Update: 2026-11-18
+--- /dev/null
++++ b/man/brightery-doctor.1
+@@ -0,0 +1,94 @@
++.TH BRIGHTERY-DOCTOR 1 "November 2026" "Brightery Doctor 1.2.0" "User Commands"
++.SH NAME
++brightery-doctor \- read-only Linux server health dashboard
++.SH SYNOPSIS
++.B brightery-doctor
++.RI [ OPTIONS ]
++.SH DESCRIPTION
++.B brightery-doctor
++samples Linux CPU activity, memory availability, I/O pressure,
++disk activity, and process states to help identify possible
++performance bottlenecks. It displays a terminal dashboard with
++green (healthy), amber (warning), or red (critical) status indicators.
++It can also produce offline HTML and machine-readable JSON reports.
++.PP
++The diagnostic scan is read-only. It does not open a network port,
++change permissions, restart services, or install packages.
++Only the explicitly requested report files may be written.
++The findings are heuristic and do not establish a root cause.
++.SH OPTIONS
++.TP
++.B \-\-seconds SECONDS
++Duration of the sample, from 1 to 120 seconds. Default: 6 seconds.
++.TP
++.B \-\-interval SECONDS
++Sampling interval, from 0.5 to 5 seconds. Default: 1 second.
++.TP
++.B \-\-json
++Print structured JSON instead of the terminal dashboard.
++.TP
++.B \-\-plain
++Print the legacy plain-text diagnostic output.
++.TP
++.B \-\-color
++Force ANSI dashboard coloring, even when standard output is redirected.
++.TP
++.B \-\-no\-color
++Disable ANSI dashboard colors.
++.TP
++.B \-\-ascii
++Use ASCII borders rather than Unicode box-drawing characters.
++.TP
++.B \-\-save FILE
++Create a new JSON report file with permissions 0600.
++Existing destination files are not overwritten.
++.TP
++.B \-\-report FILE
++Create a new, color-free text report with permissions 0600.
++Existing destination files are not overwritten.
++.TP
++.B \-\-html\-report FILE
++Create a new, self-contained, offline HTML report with permissions 0600.
++No external assets, scripts, or listening services are required.
++Existing destination files are not overwritten.
++.TP
++.B \-\-include\-hostname
++Include the host name in generated report data.
++The host name is omitted by default.
++.TP
++.B \-\-version
++Print the application version and exit.
++.TP
++.B \-h, \-\-help
++Print command-line help and exit.
++.SH EXAMPLES
++.TP
++.B brightery-doctor
++Scan and display the default terminal dashboard.
++.TP
++.B brightery-doctor \-\-seconds 15
++Collect a longer sample.
++.TP
++.B brightery-doctor \-\-json
++Write a JSON report to standard output.
++.TP
++.B brightery-doctor \-\-html\-report /tmp/server-health.html
++Create an offline HTML report that can be opened in a browser.
++.SH SECURITY AND PRIVACY
++The process command-line arguments are not retained in reports.
++Only a limited portion of command-line data is inspected to detect
++recursive permission operations. Reports may include process names,
++process IDs, and service names; review them before sharing.
++.PP
++Report files are created with mode 0600 and are not overwritten.
++Choose a trusted parent directory for sensitive reports.
++.SH LIMITATIONS
++Results describe a bounded observation window. A healthy result
++does not prove an absence of problems outside that window.
++Measurement availability and performance thresholds vary by system.
++.SH AUTHOR
++Brightery <support@brightery.com>
++.SH SEE ALSO
++.BR proc (5),
++.BR iostat (1),
++.BR top (1)
