@@ -29,7 +29,15 @@ The source **Maintainer** is `Brightery <support@brightery.com>` and **Uploaders
 
 ## File an ITP and tag the upstream release
 
-Check https://www.debian.org/devel/wnpp/ and the Debian package tracker for an existing package. If none exists, run `reportbug wnpp`, select **ITP**, and describe the upstream version 1.2.0, the Expat/MIT license, https://github.com/melsaeed/brightery-doctor and the Linux diagnostic purpose.
+Check https://www.debian.org/devel/wnpp/ and the Debian package tracker for an existing package. If none exists, file an **ITP** for upstream version 1.2.0, the Expat/MIT license, https://github.com/melsaeed/brightery-doctor and the Linux diagnostic purpose.
+
+**On Ubuntu hosts**, `reportbug` defaults to the Ubuntu bug system, which is unsupported by this tool. Explicitly direct it to Debian using `-B debian`:
+
+```sh
+reportbug -B debian --email m.elsaeed@brightery.com wnpp
+```
+
+Select **ITP (Intent to Package)** and fill the prompts with the data from [packaging/ITP_DRAFT.txt](packaging/ITP_DRAFT.txt). The command only submits the ITP if email delivery is configured and you explicitly send the report. Configure a trusted SMTP relay or mail transport if needed; otherwise send a correctly formatted ITP email from the legitimate Brightery mailbox to `submit@bugs.debian.org`. Debian will email a bug number after accepting the report. Do not assume a number until Debian confirms it.
 
 Once assigned an ITP bug number, add `(Closes: #NUMBER)` to the initial entry in `debian/changelog`.
 
