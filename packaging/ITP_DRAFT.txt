@@ -1,0 +1,32 @@
+# Debian WNPP Intent to Package — draft
+# Check for existing Debian package/ITP before filing.
+# Send with a verified mail account or reportbug. This is NOT submitted.
+
+To: submit@bugs.debian.org
+Subject: ITP: brightery-doctor -- read-only Linux server health dashboard
+
+Package: wnpp
+Severity: wishlist
+Owner: Brightery <support@brightery.com>
+X-Debbugs-Cc: debian-devel@lists.debian.org
+
+* Package name    : brightery-doctor
+  Version         : 1.2.0
+  Upstream Contact: Brightery <support@brightery.com>
+* URL             : https://github.com/melsaeed/brightery-doctor
+* License         : Expat (MIT)
+  Programming Lang: Python 3
+  Description     : read-only Linux server performance diagnostic dashboard
+
+ Brightery Doctor collects bounded Linux /proc and /sys samples to
+ identify possible CPU I/O wait, disk queue and write-latency pressure,
+ memory pressure, and unusually blocked processes. It displays an
+ accessible, color-coded terminal health report and can export private,
+ offline HTML and JSON reports.
+ .
+ It uses only Python's standard library, makes no network requests,
+ does not listen on sockets, and does not automatically modify services
+ or configuration. It helps administrators triage Linux server incidents.
+
+Debian Policy packaging and tests are available in the upstream
+repository and require final maintainer/sponsor review.
