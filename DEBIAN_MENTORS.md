@@ -85,3 +85,24 @@ After the upload appears on Debian Mentors, enable **Needs a Sponsor**, use the 
 Official instructions: https://mentors.debian.net/intro-maintainers/
 Debian Policy: https://www.debian.org/doc/debian-policy/
 Copyright format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+## One-command review and final signature
+
+After supplying a real personal Uploaders identity and filing an ITP, run a local source/binary packaging preflight (uses lintian and Debian build tools; requires a Debian development machine):
+
+```bash
+./scripts/check-debian-source.sh
+./scripts/build-debian-source.sh
+```
+
+Once you have an ITP bug number, insert `(Closes: #NUMBER)` into `debian/changelog`, rebuild the source package, and review it. The signed upload must be produced **after** that change.
+
+To perform the remaining signer-controlled upload using your personal private key:
+
+```bash
+./scripts/sign-upload-mentors.sh YOUR_PERSONAL_GPG_FINGERPRINT
+```
+
+The script checks your personal secret key is available, requests confirmation, invokes `debsign`, then uploads with `dput mentors` if signing succeeds. It does not run in the APT package or in a scheduled job. Do not run this until the source has passed clean-room review, a sponsor accepts the package for consideration, and the ITP exists.
+
+ITP and RFS drafts are under [packaging/ITP_DRAFT.txt](packaging/ITP_DRAFT.txt) and [packaging/RFS_GUIDE.md](packaging/RFS_GUIDE.md).
