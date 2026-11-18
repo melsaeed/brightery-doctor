@@ -1,0 +1,20 @@
+Source: brightery-doctor
+Section: admin
+Priority: optional
+Maintainer: YOUR REAL NAME <your-email@example.invalid>
+Build-Depends: debhelper-compat (= 13), dh-sequence-python3, python3 (>= 3.8)
+Standards-Version: 4.7.4
+Rules-Requires-Root: no
+Homepage: https://github.com/melsaeed/brightery-doctor
+Vcs-Git: https://github.com/melsaeed/brightery-doctor.git
+Vcs-Browser: https://github.com/melsaeed/brightery-doctor
+
+Package: brightery-doctor
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: Read-only diagnostic dashboard for Linux servers
+ Brightery Doctor samples CPU, memory pressure, disk I/O and Linux
+ process state to identify potential performance bottlenecks.
+ It shows colored terminal status indicators and can generate an
+ offline HTML health report without a background daemon or network
+ listener. Python standard-library dependencies only.

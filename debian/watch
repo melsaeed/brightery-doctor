@@ -1,0 +1,4 @@
+version=4
+opts=filenamemangle=s/.+\/v?(\d[\d.]*)\.tar\.gz/brightery-doctor-$1\.tar\.gz/,dversionmangle=s/\+ds\d*$// \
+  https://github.com/melsaeed/brightery-doctor/tags \
+  .*/archive/refs/tags/v?(\d[\d.]*)\.tar\.gz

@@ -1,0 +1,2 @@
+brightery-doctor usr/bin
+brightery_doctor/*.py usr/lib/python3/dist-packages/brightery_doctor

@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+brightery-doctor --version
+brightery-doctor --help >/dev/null
+brightery-doctor --seconds 1 --json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["version"] == "1.2.0"; assert "health" in d'
