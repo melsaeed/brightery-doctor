@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+*.pem
+*.key
+*.asc
+*.gpg
+!docs/apt/brightery-doctor-archive-keyring.gpg
+dist/
+*.deb
+*.log
+*.jsonl
+reports/

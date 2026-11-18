@@ -1,0 +1,1 @@
+"""Brightery Doctor Linux diagnostics."""
