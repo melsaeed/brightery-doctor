@@ -71,3 +71,7 @@ sudo apt install ./dist/brightery-doctor_1.2.0_all.deb
 Signing and publishing a new package requires the **dedicated private APT key**, kept off GitHub; see [APT_REPOSITORY.md](APT_REPOSITORY.md). No GitHub Actions workflows are required.
 
 See [SECURITY.md](SECURITY.md) for vulnerability reporting.
+
+## Official Debian and Ubuntu archive submission
+
+Debian-standard source packaging is in `debian/`, with a source-only build helper and a submission guide in [DEBIAN_MENTORS.md](DEBIAN_MENTORS.md). **Not yet accepted into Debian or Ubuntu.** A real maintainer identity, ITP bug, clean build/lintian checks, personal OpenPGP key, and sponsoring Debian Developer are still required. The existing signed APT repository uses a **different archive key**.
