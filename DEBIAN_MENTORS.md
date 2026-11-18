@@ -1,6 +1,6 @@
 # Brightery Doctor — Debian Mentors packaging and submission
 
-**Status:** Packaging is prepared in `debian/`, but the package has **not** been accepted into Debian or Ubuntu. A real maintainer identity, an ITP bug number, a signed upload, and sponsor review are still required. The package has not yet been checked by lintian or a clean Debian unstable sbuild.
+**Status:** Packaging is prepared in `debian/`, but the package has **not** been accepted into Debian or Ubuntu. An ITP bug number, a signed upload, and sponsor review are still required. The package has not yet been checked by lintian or a clean Debian unstable sbuild.
 
 ## Personal OpenPGP key
 
@@ -25,7 +25,7 @@ git clone https://github.com/melsaeed/brightery-doctor.git
 cd brightery-doctor
 ```
 
-The source **Maintainer** is already set to `Brightery <support@brightery.com>`, and the Debian changelog identifies Brightery as requested. Because Brightery is an organization using a shared contact email, Debian Policy §5.6.3 requires **at least one named human** in `Uploaders:`. Edit `debian/control` to replace `YOUR PERSONAL NAME <uploader@example.invalid>` with the person maintaining Debian packages (and a personal, reachable address associated with the registered OpenPGP key). Do not upload with the placeholder. A sponsor may also ask to identify a human as `Changed-By`.
+The source **Maintainer** is `Brightery <support@brightery.com>` and **Uploaders** is `Muhammad Elsaeed <m.elsaeed@brightery.com>`. The Debian changelog trailer also names Muhammad Elsaeed as the release preparer (`Changed-By`), as Debian Policy expects. Confirm that the personal OpenPGP key registered on Debian Mentors has an appropriate UID for `m.elsaeed@brightery.com`. Never substitute the dedicated archive signing key for the personal key.
 
 ## File an ITP and tag the upstream release
 

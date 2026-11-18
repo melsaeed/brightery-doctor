@@ -78,4 +78,4 @@ Debian-standard source packaging is in `debian/`, with a source-only build helpe
 
 ### Debian Maintainer identity
 
-Official-archive packaging lists **Brightery <support@brightery.com>** as the Maintainer, and has a deliberately unfilled human `Uploaders` identity (required when the Maintainer is a company). See [DEBIAN_MENTORS.md](DEBIAN_MENTORS.md). Do not publish a Debian source package with this placeholder. This does not affect the existing signed APT package.
+Official-archive packaging lists **Brightery <support@brightery.com>** as the Maintainer, and lists **Muhammad Elsaeed <m.elsaeed@brightery.com>** as the human `Uploaders` identity required for team-maintained packages. See [DEBIAN_MENTORS.md](DEBIAN_MENTORS.md) for the remaining signing and submission steps. This does not affect the existing signed APT package.
