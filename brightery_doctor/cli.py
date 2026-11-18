@@ -12,7 +12,10 @@ import re
 import sys
 import time
 
-VERSION = "1.1.1"
+from .dashboard import enrich, render
+from .report import html_report
+
+VERSION = "1.2.0"
 MAX_PROCESSES = 4096
 MAX_SAMPLES = 41
 SERVICE_RE = re.compile(r"(?:^|/)([A-Za-z0-9_.@-]{1,88}\.service)(?:/|$)")
@@ -226,9 +229,18 @@ def summarize(first, last, samples, hostname=False):
     full = last["psi"].get("full", {}).get("avg10", 0)
     if full >= 10:
         findings.append("CRITICAL: I/O full pressure %.1f%% (10s average)" % full)
+    elif full >= 3:
+        findings.append("WARNING: Elevated I/O full pressure %.1f%% (10s average)" % full)
+    if "full" not in last["psi"]:
+        findings.append("WARNING: I/O pressure data unavailable on this system")
+    if not disks:
+        findings.append("WARNING: No block-device samples available")
     for disk in disks:
         if disk["queue_depth"] >= 20 or (disk["writes_per_s"] >= 30 and disk["write_await_ms"] >= 30):
             findings.append("CRITICAL: %s write bottleneck, %.0f writes/s, %.1fms latency, queue %.1f" %
+                            (disk["device"], disk["writes_per_s"], disk["write_await_ms"], disk["queue_depth"]))
+        elif disk["queue_depth"] >= 10 or (disk["writes_per_s"] >= 30 and disk["write_await_ms"] >= 15):
+            findings.append("WARNING: %s elevated disk writes, %.0f writes/s, %.1fms latency, queue %.1f" %
                             (disk["device"], disk["writes_per_s"], disk["write_await_ms"], disk["queue_depth"]))
     for p in procs:
         if p["recursive_permissions"]:
@@ -236,14 +248,18 @@ def summarize(first, last, samples, hostname=False):
                             (p["pid"], p["name"], p["parent_name"] or "unknown", p["service"] or p["parent_service"] or "unknown"))
             if sum("SUSPECT:" in x for x in findings) >= 3:
                 break
-    if mem.get("MemTotal", 0) and mem.get("MemAvailable", 0) / mem["MemTotal"] < 0.1:
-        findings.append("CRITICAL: Available memory below 10%")
+    if mem.get("MemTotal", 0):
+        memory_ratio = mem.get("MemAvailable", 0) / mem["MemTotal"]
+        if memory_ratio < 0.1:
+            findings.append("CRITICAL: Available memory below 10%")
+        elif memory_ratio < 0.2:
+            findings.append("WARNING: Available memory below 20%")
     if not findings:
         findings.append("OK: No obvious bottleneck detected in this short sample")
     result = dict(name="Brightery Server Doctor", version=VERSION,
                   timestamp_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
                   sample_seconds=round(duration, 2), sample_count=len(samples),
-                  cpu=cpu, load_1_5_15=list(os.getloadavg()),
+                  logical_cpus=os.cpu_count() or 0, cpu=cpu, load_1_5_15=list(os.getloadavg()),
                   memory_total_bytes=mem.get("MemTotal", 0),
                   memory_available_bytes=mem.get("MemAvailable", 0),
                   swap_used_bytes=max(0, mem.get("SwapTotal", 0) - mem.get("SwapFree", 0)),
@@ -252,7 +268,7 @@ def summarize(first, last, samples, hostname=False):
                   note="Snapshot indicates correlation, not definitive causation. No commands or secrets are collected.")
     if hostname:
         result["hostname"] = clean(os.uname().nodename)
-    return result
+    return enrich(result)
 
 
 def display(result):
@@ -289,19 +305,31 @@ def save_new_file(path, text):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Read-only Linux performance diagnosis (no network required)")
+    parser = argparse.ArgumentParser(description="Privacy-first read-only Linux health dashboard")
     parser.add_argument("--seconds", type=float, default=6, help="duration in seconds (1–120)")
     parser.add_argument("--interval", type=float, default=1, help="sample interval (0.5–5 seconds)")
-    parser.add_argument("--json", action="store_true", help="print JSON instead of text")
-    parser.add_argument("--save", metavar="FILE", help="create a private 0600 report file; refuses overwrites")
-    parser.add_argument("--include-hostname", action="store_true", help="include hostname in report (privacy opt-in)")
+    views = parser.add_mutually_exclusive_group()
+    views.add_argument("--json", action="store_true", help="print structured JSON instead of dashboard")
+    views.add_argument("--plain", action="store_true", help="use legacy plain-text output")
+    colors = parser.add_mutually_exclusive_group()
+    colors.add_argument("--color", action="store_true", help="force ANSI colors (only for dashboard)")
+    colors.add_argument("--no-color", action="store_true", help="disable ANSI colors")
+    parser.add_argument("--ascii", action="store_true", help="use ASCII borders for limited terminals")
+    parser.add_argument("--save", metavar="FILE", help="create a private JSON report (0600; no overwrites)")
+    parser.add_argument("--report", metavar="FILE", help="create a private color-free text report (0600)")
+    parser.add_argument("--html-report", metavar="FILE", help="create a private offline HTML report (0600)")
+    parser.add_argument("--include-hostname", action="store_true", help="include hostname in reports (privacy opt-in)")
     parser.add_argument("--version", action="version", version="brightery-doctor " + VERSION)
     args = parser.parse_args(argv)
     if sys.platform != "linux" or not os.path.exists("/proc/stat"):
         parser.error("Linux with /proc is required")
     if not 1 <= args.seconds <= 120 or not 0.5 <= args.interval <= 5:
         parser.error("--seconds must be 1–120; --interval must be 0.5–5")
-    first = snapshot(); samples = [first]
+    paths = [os.path.abspath(p) for p in (args.save, args.report, args.html_report) if p]
+    if len(paths) != len(set(paths)):
+        parser.error("Report destinations must use different paths")
+    first = snapshot()
+    samples = [first]
     finish = first["t"] + args.seconds
     while len(samples) < MAX_SAMPLES:
         remaining = finish - time.monotonic()
@@ -310,21 +338,23 @@ def main(argv=None):
         time.sleep(min(max(args.interval, args.seconds / (MAX_SAMPLES - 1)), remaining))
         samples.append(snapshot())
     result = summarize(first, samples[-1], samples, args.include_hostname)
-    if args.json or args.save:
-        output = json.dumps(result, indent=2, sort_keys=True)
-    else:
-        display(result)
-        return 0
     if args.json:
-        print(output)
-    else:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    elif args.plain:
         display(result)
-    if args.save:
+    else:
+        flag = True if args.color else False if args.no_color else None
+        print(render(result, color=flag, ascii_only=args.ascii))
+    for path, contents, label in ((args.save, json.dumps(result, indent=2, sort_keys=True), "JSON"),
+                                  (args.report, render(result, color=False, ascii_only=args.ascii), "Text"),
+                                  (args.html_report, html_report(result), "HTML")):
+        if not path:
+            continue
         try:
-            save_new_file(args.save, output)
+            save_new_file(path, contents)
         except OSError as exc:
             parser.exit(2, "Cannot create report: %s\n" % clean(str(exc), 250))
-        print("Private JSON report created: %s" % clean(args.save, 250), file=sys.stderr)
+        print("Private %s report created: %s" % (label, clean(path, 250)), file=sys.stderr)
     return 0
 
 

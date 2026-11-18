@@ -1,45 +1,73 @@
 # Brightery Doctor
 
-Read-only Linux/Ubuntu server diagnosis, using only Python 3's standard library. Designed to surface I/O saturation, blocked `D`-state tasks, high CPU wait, memory pressure, and recursive permission jobs with their parent service.
+**Read-only, dependency-free Linux server health dashboard.** Ubuntu/Debian, Python 3 standard library, no web service or open ports, no third-party Python dependencies. Public MIT-licensed source.
 
-## Safety model
+## Example
 
-- **No network access**, no subprocess execution, no service restarts, no cleanup, no installation of dependencies while scanning.
-- Process **command-line arguments and environment variables are never recorded**. Hostname is excluded by default. Output contains process and service names/PIDs, which can still be identifying; review reports before sharing.
-- `--save` is the only scan option that writes a file. It creates a fresh report with mode `0600`, refuses existing files and final-component symlinks. Use a trusted directory; do not write as root into a directory controlled by other users.
-- Bounded sampling: 120-second limit, at most 4,096 process entries per sample and 41 samples. Best-effort attribution—not proof of causation. The tool does not require root; non-root users may see less detail.
-- No persistent agent, server, open port, remote API, or auto-update feature.
-
-## Usage from source
-
-```bash
-python3 brightery-doctor --seconds 6
-python3 brightery-doctor --seconds 15 --json
-python3 brightery-doctor --seconds 10 --save /root/doctor-report.json
+```text
+╭─────────────────────────────────────────────────────────────────────────╮
+│ BRIGHTERY DOCTOR  v1.2.0  |  READ-ONLY HEALTH REPORT                    │
+│ ● HEALTHY   No significant bottleneck detected in this sample           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ SERVER OVERVIEW                                                         │
+│   ●  CPU I/O wait     1.5%                                              │
+│   ●  Available RAM    16.8 GiB                                          │
+│   ●  I/O pressure     0.0%                                              │
+│   ●  Disk bottleneck  sda · 3.5 ms                                      │
+╰─────────────────────────────────────────────────────────────────────────╯
 ```
 
-## Build and install a local Debian package
+Colors are green for healthy, amber for warnings, red for critical. Colors are enabled for interactive terminals and disabled for pipes, `NO_COLOR`, or `--no-color`. `--color` forces ANSI coloring. `--ascii` uses ASCII borders.
 
-On Debian/Ubuntu with `dpkg-deb` installed:
+## Install via signed APT
+
+See [APT_REPOSITORY.md](APT_REPOSITORY.md). The repository uses an explicitly scoped signing key; verify fingerprint `E63D3954E4532650A0DA2865070CB56B2FF393C7` out of band. Once the repository is configured:
+
+```bash
+sudo apt update
+sudo apt install brightery-doctor
+```
+
+## Run
+
+```bash
+brightery-doctor                          # color dashboard on SSH/TTY
+brightery-doctor --seconds 15             # longer sample (max 120s)
+brightery-doctor --no-color --ascii       # no ANSI or Unicode box drawing
+brightery-doctor --plain                  # legacy text report
+brightery-doctor --json                   # machine-readable report
+brightery-doctor --save /root/check.json  # private JSON report (0600)
+brightery-doctor --report /root/check.txt # private text report (0600)
+brightery-doctor --html-report /root/check.html # offline HTML dashboard (0600)
+```
+
+Open the HTML file on a trusted computer to view cards, warnings and status colors. The report requires **no network**, JavaScript, fonts, images, backend, or browser plugins; Content Security Policy blocks external resources. Share reports only after reviewing process/service identifiers.
+
+### Interpretation
+
+* **HEALTHY (green)** — current scan finds no significant bottleneck.
+* **WARNING (amber)** — elevated latency/pressure, suspicious recursive permission operations, or missing telemetry.
+* **CRITICAL (red)** — severe disk latency/queue, I/O wait, memory pressure, or stall pressure.
+
+Thresholds are heuristics, not guarantees. `write_await_ms` measures observed device latency; it does not mean every 1-second spike is caused by a single process. One snapshot cannot diagnose past incidents after they end. High `busy_pct` alone does not prove saturation.
+
+### Security model
+
+* Does not execute commands, contact the network, alter services, open ports, or restart anything.
+* Process arguments and environments are never included in reports. For `chmod`, `chown`, and `chgrp`, only a limited read of `/proc/PID/cmdline` checks for the recursive flag and is never retained or displayed.
+* No hostname by default; `--include-hostname` explicitly opts in.
+* Report writes use mode `0600`, refuse existing destinations and final-component symlinks. Save reports only inside a trusted directory.
+* Max 120-second scan, 41 samples, 4,096 process entries per sample. Non-root is preferable where sufficient.
+
+## Build and test
 
 ```bash
 python3 -m unittest discover -s tests -v
+python3 -m compileall -q brightery_doctor
 ./scripts/build-deb.sh
-sudo apt install ./dist/brightery-doctor_1.1.1_all.deb
-brightery-doctor --seconds 6
+sudo apt install ./dist/brightery-doctor_1.2.0_all.deb
 ```
 
-**`apt install brightery-doctor` without `./...` requires a configured APT repository.** Merely publishing code to GitHub does not register a package in Ubuntu/Debian's official repositories. We provide a script to generate a **signed** static repository on GitHub Pages; see [APT_REPOSITORY.md](APT_REPOSITORY.md). It must be published by the repository maintainer with an independently managed GPG signing key before the remote APT installation works.
+Signing and publishing a new package requires the **dedicated private APT key**, kept off GitHub; see [APT_REPOSITORY.md](APT_REPOSITORY.md). No GitHub Actions workflows are required.
 
-## Development
-
-```bash
-python3 -m unittest discover -s tests -v
-python3 -m py_compile brightery_doctor/cli.py
-```
-
-Issues and security reports: see [SECURITY.md](SECURITY.md). Licensed under MIT.
-
-## Published APT archive
-
-The signed archive files are tracked in `docs/apt/`. The signing fingerprint is **`E63D3954E4532650A0DA2865070CB56B2FF393C7`**. Verify this fingerprint independently before installing. Until GitHub Pages is enabled, the raw GitHub archive can be used as the source URL. See [APT_REPOSITORY.md](APT_REPOSITORY.md) for instructions and security notes. APT validates the signed `InRelease` metadata and SHA256 hashes for packages.
+See [SECURITY.md](SECURITY.md) for vulnerability reporting.

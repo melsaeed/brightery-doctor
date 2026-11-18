@@ -1,16 +1,17 @@
 Package: brightery-doctor
-Version: 1.1.1
+Version: 1.2.0
 Architecture: all
 Maintainer: Brightery Doctor contributors
 Depends: python3 (>= 3.8)
-Filename: pool/main/b/brightery-doctor/brightery-doctor_1.1.1_all.deb
-Size: 7440
-MD5sum: 2865d3261d474c0b9e5446dbfd90048b
-SHA1: 4425d484820f5f1a2ba8a7f0eb28ea43c74199cc
-SHA256: 4850ba363ed1634440fe9e46d638b1258ba57f15fd5b90cfbc69e2d2d601295c
+Filename: pool/main/b/brightery-doctor/brightery-doctor_1.2.0_all.deb
+Size: 13472
+MD5sum: be2141736b81e8c58ae92877dd134b7a
+SHA1: 9cbacb8e54ad4e105e4e7005c7c34d14677cd452
+SHA256: e4faa3cf479a711d52bf050ab152eb1159d199c5667cc24babc5d3299e125bc8
 Section: admin
 Priority: optional
-Description: Read-only Linux server performance triage
- Diagnose high disk I/O, memory pressure, and suspicious recursive permissions
- operations using only standard Linux procfs and sysfs interfaces.
+Description: Read-only Linux health dashboard and server diagnostics
+ Displays color-coded server health and detects storage saturation,
+ memory pressure, and recursive permission operations. Produces
+ offline HTML, text and JSON reports with no background agent.
 
