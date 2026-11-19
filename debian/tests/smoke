@@ -1,5 +1,38 @@
 #!/bin/sh
 set -eu
+SRC=$(pwd)
+WORK=$(mktemp -d "${AUTOPKGTEST_TMP:-/tmp}/brightery-doctor.XXXXXXXX")
+trap 'rm -rf "$WORK"' EXIT HUP INT TERM
+cd "$WORK"
+unset PYTHONPATH
+export PYTHONDONTWRITEBYTECODE=1
+# Exercise installed Python modules rather than importing the checkout.
+python3 -c 'import brightery_doctor.cli as c; assert c.__file__.startswith("/usr/lib/python3/dist-packages/"), c.__file__'
+python3 -m unittest discover -s "$SRC/tests" -v
+# Exercise the installed executable and its actual report-writing behavior.
 brightery-doctor --version
 brightery-doctor --help >/dev/null
-brightery-doctor --seconds 1 --json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["version"] == "1.2.0"; assert "health" in d'
+brightery-doctor --seconds 1 --json --save report.json --html-report report.html > stdout.json
+python3 - <<'PY'
+import json
+import pathlib
+import stat
+data = json.loads(pathlib.Path("stdout.json").read_text())
+assert data["version"] == "1.2.0"
+assert data["health"] in ("healthy", "warning", "critical")
+assert data["sample_count"] >= 2
+assert set(("user_pct", "system_pct", "idle_pct", "iowait_pct")) <= data["cpu"].keys()
+assert "hostname" not in data
+assert json.loads(pathlib.Path("report.json").read_text()) == data
+for name in ("report.json", "report.html"):
+    assert stat.S_IMODE(pathlib.Path(name).stat().st_mode) == 0o600
+html = pathlib.Path("report.html").read_text()
+assert "Content-Security-Policy" in html
+assert "<script" not in html.lower()
+PY
+cp report.json original.json
+if brightery-doctor --seconds 1 --save report.json > /dev/null 2>&1; then
+    echo "Existing report was not refused" >&2
+    exit 1
+fi
+cmp original.json report.json

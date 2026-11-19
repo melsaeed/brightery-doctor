@@ -4,7 +4,9 @@
 	dh $@
 
 override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+endif
 
 override_dh_install:
 	dh_install

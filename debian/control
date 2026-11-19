@@ -1,5 +1,6 @@
 Source: brightery-doctor
 Section: admin
+Priority: optional
 Maintainer: Brightery <support@brightery.com>
 Uploaders: Muhammad Elsaeed <m.elsaeed@brightery.com>
 Build-Depends: debhelper-compat (= 13), dh-sequence-python3, python3 (>= 3.8)

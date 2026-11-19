@@ -1,6 +1,6 @@
 # Brightery Doctor — Debian Mentors packaging and submission
 
-**Status:** Packaging is prepared in `debian/`, but the package has **not** been accepted into Debian or Ubuntu. Debian acknowledged [ITP #1154410](https://bugs.debian.org/1154410) on 18 November 2026. Local Ubuntu source/binary builds, 16 unit tests, and lintian checks passed before the ITP reference was added. Final rebuild, clean Debian unstable testing, signed Mentors upload, and sponsor review remain pending.
+**Status:** Packaging is prepared in `debian/`, but the package has **not** been accepted into Debian or Ubuntu. Debian acknowledged [ITP #1154410](https://bugs.debian.org/1154410) on 18 November 2026. Local Ubuntu source/binary builds, 16 unit tests, and lintian checks passed before the ITP reference was added. The signed initial source upload is listed on Mentors and the v1.2.0 tag has been verified. The following packaging-only improvements respond to Mentors QA; a replacement upload, clean Debian unstable testing and sponsor review remain pending.
 
 ## Personal OpenPGP key
 
@@ -168,3 +168,9 @@ gpg --armor --export C850B1AB24FE1C31CFAAE3036F7DF6E2768F6B20 > brightery-mentor
 Upload the **updated public** key to the Debian Mentors profile, ensuring the new UID is included. Never upload the private key. The private key currently appears to be held by `root` on the `shad` production server; move signing operations to a trusted dedicated signing computer and protect/backup the secret key. Avoid deleting the only key copy.
 
 Run builds as an **unprivileged user** (not `root`) in a clean Debian unstable build environment to avoid lintian root-privilege warnings and production-server risk.
+
+## Mentors QA follow-up (19 November 2026)
+
+The initial 1.2.0+ds-1 upload exposed older Lintian's recommended Priority field, nocheck handling, superficial tests and watch metadata findings. The packaging now declares optional priority (newer Lintian may call this redundant), respects DEB_BUILD_OPTIONS=nocheck, exercises installed modules and report creation in autopkgtest, adds upstream metadata, and tracks Git tags directly instead of relying on GitHub HTML. The verified v1.2.0 tag is not OpenPGP-signed; pgpmode=none explicitly records this limitation. A signed Debian upload does not authenticate an upstream tarball independently.
+
+Because the package has not entered Debian, retain the initial Debian revision and ITP reference for the corrected Mentors submission. Confirm the package has not actually been uploaded by a sponsor before replacing it; do not mark it uploaded to Debian yourself. Use the same pinned orig archive. Check the new source with `uscan --report-status --verbose`, the existing preflight scripts, and a clean Debian unstable build plus autopkgtest. If all pass, sign and re-upload, then enable Needs a Sponsor and use the RFS template. If dput refuses due to an earlier local upload log, use `dput -f mentors ../debian-build/brightery-doctor_1.2.0+ds-1_source.changes` only after verifying the replacement files and their signatures.

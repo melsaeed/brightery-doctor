@@ -3,6 +3,9 @@ brightery-doctor (1.2.0+ds-1) unstable; urgency=medium
   * Initial Debian packaging of the read-only Linux diagnostic tool.
     (Closes: #1154410)
   * Repack upstream sources to exclude prebuilt APT packages and keys.
-  * Run upstream unit tests during Debian builds.
+  * Run upstream unit tests during Debian builds unless nocheck is requested.
+  * Track upstream Git tags and add upstream project metadata.
+  * Exercise installed modules and report generation in autopkgtest.
+  * Declare optional priority for compatibility with older QA tools.
 
  -- Muhammad Elsaeed <m.elsaeed@brightery.com>  Wed, 18 Nov 2026 17:00:00 +0200
